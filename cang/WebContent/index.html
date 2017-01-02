@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<title>搜藏</title>
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+
+</head>
+<body>
+	<form name="favForm" method="post"
+		action="/cang/fav.do;jsessionid=FF8C0487A99814B144B07E5633524A0F">
+		<input type="hidden" name="op" value="toList" />
+
+		<div class="banner" valign="top">搜藏</div>
+
+		<table cellspacing="0" cellpadding="0" border="0">
+			<tr>
+				<td style="text-align: right;" valign="top">
+					<!-- 左边Tag列表 -->
+					<div class="left_labels">
+
+
+						<table class="labels_table" cellspacing="0" cellpadding="0"
+							border="0">
+						</table>
+						
+					</div>
+				</td>
+				<td>
+					<!-- 右边fav内容 -->
+					<div class="content_links">
+
+					</div>
+				</td>
+			</tr>
+		</table>
+
+	</form>
+</body>
+
+<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+	
+	$(function(){
+		showAllTag();
+		toList('-1');
+	});
+	
+	function showAllTag(){
+		$.ajax({
+			url:"fav.do",
+			data:"op=selectAllTag",
+			dataType:"JSON",
+			type:"POST",
+			success:function(data){
+				var str="";
+				str+="<tr><td><a href='#' onclick=add() style='font-weight: bold;'>"+
+					"添加书签</a></td></tr>";
+					
+				str+="<tr><td class='selected_label'><a href='#' onclick=toList('-1')>"+
+					"全部</a></td></tr>";
+				
+			
+				for(var i=0;i<data.length;i++){
+					str+="<tr>";
+					str+="<td><a href='#' onclick=toList('"+ data[i].tname +"')>"+data[i].tname+"</a></td>";
+					str+="</tr>";
+				}
+				
+				str+="<tr><td><a style='font-weight:bold;' href='#' onclick=toColud() >云图</a></td></tr>";
+				$(".labels_table").html(str);
+				
+		
+			}
+		});
+	}
+	
+
+	function add() {
+		window.open(
+			'addTag.html',
+			'newwindow',
+			'height=350, width=400, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no'
+		);
+	}
+	
+	function toColud(){
+		$.ajax({
+			url:"fav.do",
+			data:"op=selectAllTag",
+			dataType:"JSON",
+			type:"POST",
+			success:function(data){
+				var str="";
+				for(var i=0;i<data.length;i++){
+					str+="<a href='#' onclick=toList('"+ data[i].tname +"')"
+					+" style='font-weight:bold; font-size: "+ (data[i].tcount+6)*2 +"px';'>"+data[i].tname+"</a>&nbsp";
+				}
+				$(".content_links").html(str);
+			}
+		});
+	}
+	
+	function toList(t){
+		$.ajax({
+			url:"fav.do",
+			data:"op=toList&type="+t,
+			dataType:"JSON",
+			type:"POST",
+			success:function(data){
+				var str="";
+				
+				for(var i=0;i<data.length;i++){
+					str+="<div style='padding: 6px 10px;'>";
+					str+="<div>";
+					str+="<a href='"+data[i].furl+"' "+
+						"style='color: blue; font-size: 18px;' target='_blank'>"+
+						data[i].flabel+"</a>";
+					str+="</div>";
+					str+="<div style='color: black; font-size: 16px;'>"+data[i].fdesc+"</div>";
+					str+="<div style='color: green; font-size: 14px;'>";
+					str+=data[i].furl+"</div>";
+					str+="</div>";
+				}
+				
+				$(".content_links").html(str);
+			}
+		});
+	}
+</script>
+</html>

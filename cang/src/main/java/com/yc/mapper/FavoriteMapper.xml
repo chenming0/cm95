@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.yc.mapper.FavoriteMapper">
+	
+	<cache type="com.yc.dao.redis.cache.RedisCache"></cache>
+	
+<!-- 	<cache></cache>  调用mybatis自带的二级缓存-->
+	
+	<insert id="insertFavorite" parameterType="Favorite">
+		insert into favorite(flabel,furl,ftags,fdesc) 
+		values(#{flabel},#{furl},#{ftags},#{fdesc})
+	</insert>
+	
+	
+	
+	<select id="selectAllFavorite" resultType="Favorite">
+		select fid,flabel,furl,ftags,fdesc from favorite
+	</select>
+
+	
+	<!-- <update id="updateExistFavorite" parameterType="Favorite">
+		update favorite set flabel=#{flabel},ftags=#{ftags},fdesc=#{fdesc} 
+		where fid=#{fid}
+	</update> -->
+	
+	<select id="selectCondition" parameterType="String" resultType="Favorite">
+		select fid,flabel,furl,ftags,fdesc from favorite where ftags like #{ftags}
+	</select>
+	
+	
+		
+</mapper>

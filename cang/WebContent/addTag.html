@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>搜藏</h1>
+	<form id="addFrom">
+		名称：<input type="text" size="40" id="flabel" name="flabel" value="搜狐"/><br/><br/>
+		链接：<input type="text" size="40" id="furl" name="furl" value="http://www.sohu.com"/><br/><br/>
+		Tag：<input type="text" size="40" id="ftags" name="ftags" value="娱乐，新闻"/><br/><br/>
+		描述：<textarea id="fdesc" name="fdesc">这是我的网站</textarea><br/><br/>
+		
+		<input type="button" value="取消" onclick="closeWindow()"/> &nbsp;&nbsp;&nbsp;    
+		<input type="button" value="提交" onclick="toAdd()"/>
+	</form>
+</body>
+	<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+	<script type="text/javascript">
+		
+		function closeWindow(){
+			this.close();
+		}
+		
+		function toAdd(){
+			$.ajax({
+				url:"fav.do",
+				data:"op=toAdd&flabel="+$("#flabel").val()+"&furl="+$("#furl").val()+
+					"&ftags="+$("#ftags").val()+"&fdesc="+$("#fdesc").val(),
+				dataType:"JSON",
+				type:"POST",
+				success:function(data){
+					if(data==1){
+						alert("添加成功");
+					}else {
+						alert("添加失败");
+					}
+				}
+			});
+		}
+	</script>
+</html>
